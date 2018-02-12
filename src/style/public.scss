@@ -1,3 +1,106 @@
+// @media only screen and (max-width: 1080px), only screen and (max-device-width: 1080px) {
+//   html,
+//   body {
+//     width: 400px;
+//     background: orange;
+//     font-size: 168.75px;
+//   }
+// }
+// @media only screen and (max-width: 960px), only screen and (max-device-width: 960px) {
+//   html,
+//   body {
+//     width: 400px;
+//     background: greenyellow;
+//     font-size: 150px;
+//   }
+// }
+// @media only screen and (max-width: 800px), only screen and (max-device-width: 800px) {
+//   html,
+//   body {
+//     width: 100%;
+//     font-size: 125px;
+//   }
+// }
+// @media only screen and (max-width: 720px), only screen and (max-device-width: 720px) {
+//   html,
+//   body {
+//       width: 100%;
+//     font-size: 112.5px;
+//   }
+// }
+// @media only screen and (max-width: 640px), only screen and (max-device-width: 640px) {
+//   html,
+//   body {
+//       width: 100%;
+//     font-size: 100px;
+//   }
+// }
+// @media only screen and (max-width: 600px), only screen and (max-device-width: 600px) {
+//   html,
+//   body {
+//       width: 100%;
+//     font-size: 93.75px;
+//   }
+// }
+// @media only screen and (max-width: 540px), only screen and (max-device-width: 540px) {
+//   html,
+//   body {
+//       width: 100%;
+//     font-size: 84.375px;
+//   }
+// }
+// @media only screen and (max-width: 480px), only screen and (max-device-width: 480px) {
+//   html,
+//   body {
+//       width: 100%;
+//     font-size: 75px;
+//   }
+// }
+// @media only screen and (max-width: 414px), only screen and (max-device-width: 414px) {
+//   html,
+//   body {
+//       width: 100%;
+//     font-size: 64.6875px;
+//   }
+// }
+// @media only screen and (max-width: 400px), only screen and (max-device-width: 400px) {
+//   html,
+//   body {
+//       width: 100%;
+//     font-size: 62.5px;
+//   }
+// }
+// @media only screen and (max-width: 375px), only screen and (max-device-width: 375px) {
+//   html,
+//   body {
+//       width: 100%;
+//     font-size: 58.59375px;
+//   }
+// }
+// @media only screen and (max-width: 360px), only screen and (max-device-width: 360px) {
+//   html,
+//   body {
+//       width: 100%;
+//     font-size: 56.25px;
+//   }
+// }
+// @media only screen and (max-width: 320px), only screen and (max-device-width: 320px) {
+//   html,
+//   body {
+//       width: 100%;
+//     font-size: 50px;
+//   }
+// }
+// @media only screen and (max-width: 240px), only screen and (max-device-width: 240px) {
+//   html,
+//   body {
+//       width: 100%;
+//     font-size: 37.5px;
+//   }
+// }
+
+
+
 body, div, span, header, footer, nav, section, aside, article, ul, dl, dt, dd, li, a, p, h1, h2, h3, h4,h5, h6, i, b, textarea, button, input, select, figure, figcaption {
     padding: 0;
     margin: 0;
@@ -28,6 +131,62 @@ html,body{
     background-color: #ebebeb;
 }
 
+#box{
+    width: 100%;
+    height: 2000px;
+    overflow: auto;
+    color: #000;
+    font-size: 30px;
+    background: pink;
+}
+
+@media (min-width: 800px){
+    html, body{
+        font-size: 20px !important;
+        background: #fff !important;
+    };
+    #weixin{
+        width: 300px !important;
+        height: 500px !important;
+        position: fixed;
+        bottom: -460px;
+        right: 0;
+        background: #ebebeb;
+    }
+    .child_page, header, .reminder, .login_button{
+        position: absolute !important;
+        right: 0;
+        width: 300px !important;
+        
+    }
+    .swiper-slide ul li {
+        margin-right: .6rem !important;
+    }
+    footer{
+        position: absolute !important;
+        width: 300px !important;
+    }
+    .contacts{
+        // height: 500px !important;
+        // -webkit-overflow-scrolling: touch; 
+        // overflow-y: scroll !important;
+
+    }
+    #chat-content{
+        width: 300px !important;
+        padding: 0 1rem 0 0;
+    }
+    .coversation .coversationlist ul > li:last-child{
+        margin-bottom: 4.5rem !important;
+    }
+    .footer{
+        position: absolute !important;
+        bottom: 0;
+        right: 0;
+        width: 300px !important;
+    }
+    
+}
 
 .clear:after{
     content: '';

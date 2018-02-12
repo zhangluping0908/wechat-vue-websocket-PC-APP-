@@ -7,14 +7,14 @@ module.exports = {
         index: path.resolve(__dirname, '../weixin/index.html'),
         assetsRoot: path.resolve(__dirname, '../weixin'),
         assetsSubDirectory: 'static',
-        assetsPublicPath: '/',
+        assetsPublicPath: './',
         productionSourceMap: true,
         // Gzip off by default as many popular static hosts such as
         // Surge or Netlify already gzip all static assets for you.
         // Before setting to `true`, make sure to:
         // npm install --save-dev compression-webpack-plugin
         productionGzip: false,
-        productionGzipExtensions: ['js', 'css']
+        productionGzipExtensions: ['js', 'css', 'img']
     },
     dev: {
         env: {NODE_ENV: '"development"'},

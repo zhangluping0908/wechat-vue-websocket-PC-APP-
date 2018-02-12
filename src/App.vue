@@ -1,13 +1,13 @@
 <template>
-	<div>
-		<transition name="router-fade" mode="out-in">
+	<div v-cloak>
+		
 			<keep-alive>
 				<router-view v-if="$route.meta.keepAlive"></router-view>
 			</keep-alive>
-		</transition>
-		<transition name="router-fade" mode="out-in">
+		 
+		
 			<router-view v-if="!$route.meta.keepAlive"></router-view>
-		</transition>
+		 
 	</div>
 </template>
 <style lang="scss">
@@ -17,4 +17,8 @@
 	.router-fade-enter, .router-fade-leave-active {
 	  	opacity: 0;
 	}
+	[v-cloak]{
+		display: none;
+	}
+	
 </style>

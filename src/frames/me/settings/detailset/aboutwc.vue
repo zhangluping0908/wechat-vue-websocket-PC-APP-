@@ -1,13 +1,13 @@
 <template>
 	<section class="child_page">
-		<head-top crossover="关于微信"></head-top>
+		<head-top crossover="关于网信"></head-top>
 		<section class="aboutwx">
 			<section class="aboutwx_svg">
 				<svg>
 					<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#wxicon"></use>
 				</svg>
 			</section>
-			<section class="aboutwx_title">微信 6.5.7</section>
+			<section class="aboutwx_title">网信 6.5.7</section>
 		</section>
 		<section class="aboutwechat">
 			<ul>
@@ -24,7 +24,7 @@
 		</section>
 		<section class="agreement">
 			<div class="agreement_top">
-				<a href="https://weixin.qq.com/agreement?lang=zh_CN">《通讯微信软件许可服务协议》</a>和
+				<a href="https://weixin.qq.com/agreement?lang=zh_CN">《通讯网信软件许可服务协议》</a>和
 				<a href="http://www.qq.com/privacy.htm">《腾讯隐私政策》</a>
 			</div>
 			<div class="agreement_bottom">

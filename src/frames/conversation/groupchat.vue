@@ -1,7 +1,7 @@
 <template>
 	<section>
 		<head-top :crossover="gropname">
-			<section class="coversPart" slot="person">
+			<section class="coversPart" slot="person" v-if='coversPart'>
 				<router-link to='/groupchat/groupchatmessage' class="person_link">
 					<svg fill="#fff" class="icon-search">
 					    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#doubleperson"></use>
@@ -9,20 +9,19 @@
 				</router-link>
 			</section>
 		</head-top>
-		<section class="coversation" ref="groupHeight" @touchmove='loadMore'>
-			<section class="coversationlist">
+		<section class="coversation"  @touchmove='loadMore'>
+			<section class="coversationlist" ref="chat">
 				<div class="underscore" v-if="underscore">————&nbsp;我是有底线的&nbsp;————</div>
-				<ul>
+				<ul id="chat-content">
 					<!--  群聊-->
-					<li v-for="item in groupconversine" >
-						<div class="other" :class="{mysay : item.user_id == userInfo.id }">
+					<li v-for="item in groupconversine">
+						<div class="other" :class="{mysay : userInfo.wxid == item.fromUserId}">
 							<div class="say-time">{{item.time}}</div>
-							<img :src="imgurl + item.avatar" alt="" @click="enlargeImg(item.avatar)">
+							<img :src="item.avatar" alt="" @click="enlargeImg(item.avatar)">
 							<div class="whatsay">
-								
 								<div class="whatsay_svg">
 									<svg>
-										<use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="item.user_id == userInfo.id ? '#trigon-right' : '#trigon-left'"></use>
+										<use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href=" userInfo.wxid == item.fromUserId ? '#trigon-right' : '#trigon-left'"></use>
 									</svg>
 								</div>
 								<div class="whatsay_text">
@@ -109,9 +108,9 @@
 		<section class="enlarge" v-if="enlarge" @click="enlargeHide" :class="{'movein-animate' : enlargeShow, 'moveout-animate-leave' : enlargehides}" >
 			<img :src="imgurl + enlargeurl" alt="">
 		</section>
-		<transition name="router-show">
+		
 		    <router-view></router-view>
-		</transition>
+		 
 	</section>
 
 </template>
@@ -124,7 +123,9 @@
 	import 'src/config/swiper.min.js' 
 	import 'src/style/swiper.min.css'
 	import fetch from 'src/config/fetch'
-	const socket = io('http://cangdu.org:8003');
+	import $ from 'jquery'
+	import { requireImgUrl } from 'src/utils/requireImgUrl'
+
 	export default{ 
 		data(){
 			return{
@@ -147,30 +148,38 @@
 				chatData:{},
 				imgurl,
 				userId:'',
-				allgroups:[],	//所有群聊信息
-
+				allgroups:[],
+					//所有群聊信息
+				coversPart: true
 			}
 		},
 		created(){
-			
+			this.coversPart_isshow()
+			this.getGroupTalkData()
 		},
 		mounted(){
 
-			this.getUserInfo();
-			this.groupList(this.offset);
-			this.loadStatus=true;
+			// this.getUserInfo();
+			this.userInfo = {
+				avatar: localStorage.getItem('avatar'),
+				id: localStorage.getItem('id'),
+				name: localStorage.getItem('name'),
+				wxid: localStorage.getItem('wxid')
+			}
+			// this.groupList(this.offset);
+			this.loadStatus=false;
 			groupChat().then((res) => {
-				this.gropname=res.petname;
+				console.log('张信哲groupChat:', res)
+				this.gropname = res.petname;
+				this.grouphead = res.grouphead
+				for(var i = 0 ;i< this.grouphead.length;i ++){
+					if(this.grouphead[i].username == localStorage.getItem('wxid')){
+						var index = this.grouphead.indexOf(this.grouphead[i])
+						this.grouphead.splice(index, 1)
+					}
+				}
+				console.log(this.grouphead)
 			});	
-			socket.on('chat', (data) => {
-				if (!data) {
-					return
-				};
-				this.groupconversine.push(data);
-				this.$nextTick(()=>{
-					window.scrollTo(0,this.$refs.groupHeight.offsetHeight-window.innerHeight)
-				})
-			});
 			chatData().then((res) => {
 				this.chatData=res;
 			}).then(()=>{
@@ -186,13 +195,21 @@
 		},
 		computed:{
 			...mapState([
-			    "infor", "userInfo","allgroup"
+			    // "infor", "userInfo", "allgroup"
+				'infor', 'allgroup'
 			]),
 		},
 		beforeDestroy(){
             clearTimeout(this.timer);
-            socket.removeAllListeners();
+            // socket.removeAllListeners();
         },
+		updated: function(){
+			this.$nextTick(()=>{
+				if(this.$refs.chat){
+					$(this.$refs.chat).scrollTop($('#chat-content').height())
+				}
+			})
+		},
 		methods:{
 			...mapActions([
                 'getUserInfo',
@@ -200,7 +217,13 @@
             ...mapMutations([
                 'GET_ALLGROUP',
             ]),
-
+			coversPart_isshow(){
+				if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)){
+					this.coversPart = true
+				}else{
+					this.coversPart = false
+				}
+			},
             async groupList(offset){
             	const groupData = await getHistory({"offset":this.offset, "limit":20} )
             	if(groupData.history.length < 20){
@@ -235,35 +258,27 @@
 						return res;
 					}
 					var arr = this.allgroups;
-					this.GET_ALLGROUP(arr.unique())//保存所有人数据信息
-					
+					this.GET_ALLGROUP(arr.unique())//保存所有人数据信息					
             	}
-        		this.$nextTick(() => {
-            		this.loadStatus=false;
-        			if (offset == 0) {
-        				this.underscore=false;
-            			window.scrollTo(0, this.$refs.groupHeight.offsetHeight - window.innerHeight)
-        			}else{
-
-        				const scrollPosition = this.$refs.groupHeight.offsetHeight - this.lastPageHeight;
-        				window.scrollTo(0,scrollPosition)
-        			}
-        			this.lastPageHeight = this.$refs.groupHeight.offsetHeight;
-        		})
             },
             loadMore(){
-            	if (this.loadStatus || this.underscore) {
-            		return
-            	}
-            	this.scroll = document.body.scrollTop;
-            	if(this.scroll == 0){
-            		this.loadStatus=true;
-            		this.offset+=20;
-            		this.groupList(this.offset);
-            	}else{
-            		this.underscore=false;
-            		this.loadStatus=false;
-            	}
+				// this.loadStatus=true;
+				// setTimeout(function(){
+				// 	this.loadStatus=false
+				// }, 5000)
+				
+            	// if (this.loadStatus || this.underscore) {
+            	// 	return
+            	// }
+            	// this.scroll = document.body.scrollTop;
+            	// if(this.scroll == 0){
+            	// 	this.loadStatus=true;
+            	// 	this.offset+=20;
+            	// 	this.groupList(this.offset);
+            	// }else{
+            	// 	this.underscore=false;
+            	// 	this.loadStatus=false;
+            	// }
             },
 			whatInput(){
 				if(this.inputmessage.replace(/\s+/g, "") == ''){
@@ -286,14 +301,37 @@
 			inputBottomHide(){
 				this.clickmore=false;
 			},
-			async clickSend(){
-				socket.emit('chat', {user_id: this.userInfo.id, content: this.inputmessage});
+			getGroupTalkData(){	
+				var ws = new WebSocket('ws://10.20.88.76:8204/multisub-split/456')
+				ws.onmessage = env => {
+					var obj = JSON.parse(decodeURIComponent(env.data).split('=')[1])			
+					console.log(obj)
+					var time = new Date().toLocaleString()
+					this.groupconversine.push({
+						avatar: requireImgUrl(obj.fromUserId),
+						content: obj.message,
+						id: this.infor.id,
+						time: time,
+						user_id: this.userInfo.id,
+						username: this.userInfo.name,
+						fromUserId: obj.fromUserId
+					});
+				}
+			},
+			async clickSend(){				
+				const inputmessage = this.inputmessage;
 				this.inputmessage='';
-				this.light=false;
-				this.$nextTick(()=>{
-					window.scrollTo(0,this.$refs.groupHeight.offsetHeight-window.innerHeight)
+				$.ajax({
+					url:'http://maybach.wxfaelocal.com:8204/pub/456',
+					method:'post',
+					dataType:'json',
+					data:{
+						data:JSON.stringify({
+						'fromUserId': this.userInfo.wxid,
+						'message': inputmessage
+						})
+					},
 				})
-				
 			},
 			enlargeImg(enlargeImg){
 				this.enlargeurl=enlargeImg;
@@ -463,39 +501,63 @@
 		}
 	}
 	.coversation{
+		overflow-x: hidden;
 		background-color: #ebebeb;
 		overflow-scrolling: touch; 
 		-webkit-overflow-scrolling: touch; 
-		padding-top: 2.06933rem;
+		padding-top: 2.3rem;
 		.coversationlist{
+			// position: relative;
+			// padding:0 .32rem;
+			// padding-bottom:2.6rem;
+			// overflow:auto;
+			// margin:0 auto;
 			position: relative;
-			padding:0 .32rem;
-			padding-bottom:2.6rem;
+			right: -.5rem;
+			padding-right: 1rem;
 			overflow:auto;
-			margin:0 auto;
+			overflow-x: hidden;
+			// margin-left: -10px;
+			height: 25.1rem;
 			ul{
-				padding-top:.4rem;
-				width:15.4rem;
-        overflow-x: hidden;
+		// 		padding-top:.4rem;
+		// 		width:15.4rem;
+        // overflow-x: hidden;
+		// 		overflow-scrolling: touch; 
+		// 		-webkit-overflow-scrolling: touch; 
+		// 		top:0;
+				overflow: auto;
+				overflow-x: hidden;
 				overflow-scrolling: touch; 
-				-webkit-overflow-scrolling: touch; 
-				top:0;
+				-webkit-overflow-scrolling: touch;
+				>li:first-child{
+					margin-top: .5rem;
+				}
+				>li:last-child{
+					margin-bottom:2rem;
+				}
 				li{
 					.other{
 						width:100%;
 						@include justify(flex-start);
-						margin-bottom:1.3rem;
+						margin-bottom:1rem;
+						margin-right: 20px;
 						align-items:top;
 						position: relative;
 						.say-time{
 							@include sizeColor(.48rem,#999);
-							width:8rem;
+							// width:8rem;
+							// position: absolute;
+							// top:-.4rem;
+							// left:2.5rem;
+							width:11rem;
+							top: -.3rem;
 							position: absolute;
-							top:-.4rem;
-							left:2.5rem;
+							
 						}
 						img{
 							display:block;
+							margin-top: .4rem;
 							@include widthHeight(1.7493333333rem,1.7493333333rem);
 						}
 						.whatsay{
@@ -531,7 +593,15 @@
 						display:flex;
 						flex-direction:row-reverse;
 						.say-time{
-							left:8.8rem;
+							// left:8.8rem;
+							position: absolute;
+							right:-4.8rem;
+							top: -.3rem;
+							width: 11rem;
+							// margin-top: 1rem;
+						}
+						img{
+							margin-top: 10px;
 						}
 						.whatsay{
 							

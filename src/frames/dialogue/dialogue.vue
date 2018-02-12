@@ -1,94 +1,78 @@
 <template>
-	<section class="dialogue">
+
+	<section class="dialogue" key='dialogue'>
+	
 		<!-- 头部 -->
-		<head-top logo-part="true" search-part="true" add="true"></head-top>
-		<div class="dialogue_con">
-			<!-- 电脑登录 -->
-			<section class="computer" v-if="computershow">
-				<router-link to='/computer' class="computer_link">
-					<section class="computer_icon">
-						<svg>
-							<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#computer"></use>
-						</svg>
-					</section>
-					<section class="computer_text">Windows 微信已登录<span v-if="mute">， 手机通知已关闭</span></section>
-				</router-link>
-			</section>
-			<!-- 对话列表 -->
-			<section class="conversation">
-				<ul>
-					<router-link to="/singlechat" tag="li" v-for="item in dialogueList" @click.native="refreshInfor(item)">
-						<div class="imgwipe">
-							<i class="redicon_num" v-if="newinfor">
-							1
-							</i>
-							<i class="redicon" v-if="newtext"></i>
-							<div class="imgstyle">
-								<img :src="item.headurl" alt="">
-							</div>
-						</div>
-						<div class="infordetail">
-							<div class="infordetail_top clear">
-								<span class="left ellipsis">{{item.remarks ? item.remarks : item.petname}}</span>
-								<span class="right">12:07</span>
-							</div>
-							<div class="infordetail_bot ellipsis">
-								{{item.newmeassage}}
-							</div>
-						</div> 
-					</router-link>
-				</ul>
-			</section>
-			<!-- 群聊 -->
-			<section class="conversation">
-				<ul>
-					<router-link to="/groupchat" tag="li">
-						<div class="imgwipe">
-							<i class="redicon_num" v-if="newinfor">1</i>
-							<i class="redicon" v-if="newtext"></i>
-							<div class="imgstyle imgstyletwo">
-								<img :src="item.avatar" alt="" v-for="item in groupHead">
-							</div>
-						</div>
-						<div class="infordetail">
-							<div class="infordetail_top clear">
-								<span class="left ellipsis">群聊</span>
-								<span class="right">12:07</span>
-							</div>
-							<div class="infordetail_bot ellipsis">
-								请同学们文明交流~~~
-							</div>
-						</div>
-					</router-link>
-				</ul>
-			</section>
-		</div>
-		<!-- 输入用户名弹窗 -->
-		<section class="consumer" :class="{consumeradd : consumer}" v-if="consumerthing">
-			<div class="consumerbg"></div>
-			<div class="consumercon">
-				<section class="login">
-					<div class="useid" :class="{'useid_border' : borderColor}">
-						<div class="mark">帐号</div>
-						<div class="input_mark"><input type="text" placeholder="微信号(随便输入)" v-model="inputaccounts" @input="inpuMark" @click="accountsMark" /></div>
-						<div class="svg_close" v-if="accounts" @click="clearMark">
-							<svg fill="#c3c3c3">
-								<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#close"></use>
+		<head-top logo-part="true" search-part="true" add="false" key='head-top' v-on:listenToHeadEvent='MsgFromHead'></head-top>
+		
+			<div class="dialogue_con"  key='dialogue_con' v-if='' id='dialogue_con'>
+				<!-- 电脑登录 -->
+				<section class="computer" v-if="computershow">
+					<router-link to='/computer' class="computer_link">
+						<section class="computer_icon">
+							<svg>
+								<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#computer"></use>
 							</svg>
-						</div>
-					</div>
-					<div class="login_botton" @click="loginSuccess"> 
-						登 录
-					</div>
+						</section>
+						<section class="computer_text">Windows 网信已登录<span v-if="mute">， 手机通知已关闭</span></section>
+					</router-link>
+				</section>
+				<!-- 对话列表 -->
+				<section class="conversation">
+					<ul>
+						<router-link to="/singlechat" tag="li" v-for="item in dialogueList" @click.native="refreshInfor(userMap[item.wxid])">
+							<div class="imgwipe">
+								<div class="imgstyle">
+									<img :src="item.headurl" alt="">
+								</div>
+							</div>
+							<div class="infordetail" @click='isEnter'>
+								<div class="infordetail_top clear">
+									<span class="left ellipsis">{{userMap[item.wxid].petname}}</span>
+									<span class="right">{{item.time}}</span>
+								</div>
+								<div class="infordetail_bot ellipsis">
+									{{item.msg}}
+								</div>
+								<i class="redicon" v-if='item.showOrhide'></i>
+							</div> 
+						</router-link>
+					</ul>
+				</section>
+				<!-- 群聊 -->
+				<section class="conversation">
+					<ul>
+						<router-link to="/groupchat" tag="li">
+							<div class="imgwipe">
+								<i class="redicon_num" v-if="newinfor">1</i>
+								<i class="redicon" v-if="newtext"></i>
+								<div class="imgstyle imgstyletwo">
+									<img :src="item.avatar" alt="" v-for="item in groupHead">
+								</div>
+							</div>
+							<div class="infordetail">
+								<div class="infordetail_top clear">
+									<span class="left ellipsis">群聊</span>
+									<span class="right">12:07</span>
+								</div>
+								<div class="infordetail_bot ellipsis">
+									请同学们文明交流~~~
+								</div>
+							</div>
+						</router-link>
+					</ul>
 				</section>
 			</div>
-		</section>
-		<!-- 底部导航 -->
-		<foot-guide></foot-guide>
-		<transition name="router-show">
-		    <router-view></router-view>
-		</transition>
+			<!-- 输入用户名弹窗 -->
+
+			<!-- 底部导航 -->
+			<foot-guide key='foot-guide' v-if='' id='foot-guide'></foot-guide>
+			
+			<router-view></router-view>
+		
+		 
 	</section>	
+
 </template>
 
 <script>
@@ -97,7 +81,9 @@
 	import {imgurl} from 'src/config/env';
 	import {mapState,mapActions,mapMutations} from 'vuex'
 	import {groupChat, userInfo, login, dialog} from 'src/service/getData'
+	import { contacts, userMap } from 'src/service/data/contacts'
 	import fetch from 'src/config/fetch'
+	import {requireImgUrl} from 'src/utils/requireImgUrl'
 
 	export default{
 		data(){
@@ -114,28 +100,28 @@
 				borderColortwo: false,
 				timer:null,	
 				groupHead:[],
-				dialogueList:[]
+				dialogueList: [],
+				userMap:userMap,
+				list: {},
+				count: 0
 			}
 		},
 		created(){
 			this.initData()
+			this.getDialogueData()
 		},
 		beforeDestroy(){
 			
 		},
 		beforeMount(){
-			//console.log(this.contactList)
+			
+			// console.log('this.contactList', this.contactList)
 		},
-		mounted(){	
+		mounted(){
+				
 			groupChat().then( (res) =>{
 				this.groupHead=[...res.grouphead]
-				
-			});
-			dialog().then((res) =>{
-				this.dialogueList=[...res]
-				this.dialogueList=[...this.contactList,...this.dialogueList]
-			})
-			
+			});	
 		},
 		components:{
 			headTop,
@@ -143,28 +129,81 @@
 		},
 		computed:{
 			...mapState([
-				'mute', 'computershow', 'infor' ,'contactList','consumerthing',
+				// 'mute', 'computershow', 'infor' ,'contactList','consumerthing',
+				'mute', 'computershow', 'infor' ,'contactList','showOrhide'
 			]),
 			
 		},
+		// watch:{
+		// 	list: function(val, oval){
+		// 		console.log(val, oval)
+		// 	}
+		// },
 		methods:{
-			
             ...mapMutations([
-				"SAVE_MESSAGE","LOGIN_COVER" ,'GET_USERINFO'
+				"SAVE_MESSAGE","LOGIN_COVER" ,'GET_USERINFO','SHOWORHIDE'
 			]),
+			//接收从子组件传来的值
+			MsgFromHead(data){
+				console.log(data)
+				if(data%2 == 0){
+					$("#weixin").css({
+						'position':'fixed ',
+						'bottom': "-460px"
+					})					
+				}else{
+					$("#weixin").css({
+						'position':'fixed',
+						'bottom': "0px"
+					})
+				}
+			},
+			getDialogueData(){
+				
+				var that = this
+				var ws = new WebSocket('ws://10.20.88.76:8204/multisub-split/' + localStorage.getItem('wxid'))
+				ws.onmessage = env => {
+					
+					var format = decodeURIComponent(env.data).split('&')
+					var msg = format[0].split('=')[1]
+					var wxid = format[1].split('=')[1]
+					var time = format[2].split('=')[1]
+					this.list[wxid] = {
+						wxid,
+						msg ,
+						headurl: requireImgUrl(wxid),
+						time:new Date(parseInt(time) * 1000).toLocaleString().replace(/:\d{1,2}$/,' '),
+						showOrhide: 1 == 2 ? false : true
+					}
+					console.log(this.list)
+					that.dialogueList = Object.values(this.list)
+				}
+			},
 			async initData(){
 				try{
 					const user_id = localStorage.getItem('user_id')
-					const res = await userInfo(user_id)
-					if (res.status !== 200) {
-						this.LOGIN_COVER(true)
-					}else{
-						this.GET_USERINFO(res.user_info)
+					// const res = await userInfo(user_id)
+					const res = {
+						status: localStorage.getItem('status'),
+						message: localStorage.getItem('message'),
+						user_info: {
+							avatar: localStorage.getItem('avatar'),
+							name: localStorage.getItem('name'),
+							id: localStorage.getItem('id')
+						}
 					}
 				}catch(err){
 					console.log('获取用户信息失败', err)
 					this.LOGIN_COVER(true)
 				}
+			},
+			isEnter(){
+				// this.CHANGE_WARN(false)
+				console.log(this.$store)
+				// console.log(this.$route.path == '/dialogue')
+				// if(this.$route.path == '/dialogue'){
+					// this.CHANGE_WARN(false)
+				// }
 			},
             refreshInfor(item){
             	this.SAVE_MESSAGE(item)
@@ -190,27 +229,11 @@
             clearCode(){
             	this.inputcode="";
             	this.code=false;
-            },
-            async loginSuccess(){
-
-            	if(this.inputaccounts){
-            		this.consumer=true;
-            		try{
-						const res = await login({username: this.inputaccounts})
-						if (res.status == 200) {
-							localStorage.setItem('user_id', res.user_info.id.toString())
-							this.GET_USERINFO(res.user_info)
-							this.LOGIN_COVER(false)
-						}
-					}catch(err){
-						console.log('注册失败', err)
-						this.LOGIN_COVER(true)
-					}
-            	}
             }
 		}
 	}
 </script>
+
 <style lang="scss" scoped>
 	@import "src/style/public";
 	.router-show-enter-active,.router-show-leave-active{
@@ -219,85 +242,15 @@
 	.router-show-enter,.router-show-leave-active{
 		transform:translateX(100%)
 	}
-	@keyframes fadeOut {
-	  from {
-	    opacity: 1;
-	  }
-	  100% {
-	    opacity: 0;
-	  }
+
+	.zlp-enter-active, .zlp-leave-active{
+		transition: all 2s;
 	}
-	.consumer{
-		position: fixed;
-		width:100%;
-		height:100%;
-		top:0;
-		left:0;
-		z-index:100;
-		.consumerbg{
-			position: fixed;
-			width:100%;
-			height:100%;
-			top:0;
-			background:#000;
-			opacity: .5;
-		}
-		.consumercon{
-			@include center;
-			.login{
-				background:#fff;
-				border-radius:5px;
-				padding: 1rem;
-				width:12.3786666667rem;
-				margin:0 auto;
-				.useid{
-					width:100%;
-					border-bottom:1px solid #d4d4d4;
-					@include justify(flex-start);
-					align-items:center;
-					.mark{
-						@include sizeColor(0.64rem, #333);
-						letter-spacing:0.5546666667rem;
-						line-height:2.0266666667rem;
-						padding-left:0.4266666667rem;
-					}
-					.input_mark{
-						margin-right:0.34rem;
-						margin-left:.5rem;
-						@include widthHeight(5.1rem,2.0266666667rem);
-						input{
-							display:inline-block;
-							width:5.1rem;
-							line-height:2rem;
-							@include sizeColor(0.64rem, #333);
-						}
-					}
-					.svg_close{
-						@include widthHeight(0.64rem, 0.64rem);
-						svg{
-							display:block;
-							@include widthHeight(100%, 100%);
-						}
-					}
-				}
-				.useid_border{
-					border-color:#45c01a;
-				}
-				.login_botton{
-					margin-top:1.536rem;
-					text-align:center;
-					background:#1aad19;
-					border:1px solid #179e16;
-					border-radius:5px;
-					line-height:1.6rem;
-					@include sizeColor(.7rem,#fff);
-				}
-			}
-		}
+	.zlp-enter, .zlp-leave-active{
+		position: absolute;
+		bottom: -460px;
 	}
-	.consumeradd{
-		animation:fadeOut .4s 1 linear both;
-	}
+
 	.dialogue{
 		width:100%;
 		background:#fff;
@@ -334,6 +287,7 @@
 				ul{
 					width:100%;
 					li{
+						position: relative;
 						padding:0.3413333333rem 0.5973333333rem;
 						box-sizing:border-box;
 						border-bottom:1px solid #e0e0e0;
@@ -353,14 +307,7 @@
 								text-align:center;
 								@include bg('../../images/warn.png');
 							}
-							.redicon{
-								position: absolute;
-								right:-0.21rem;
-								top:-0.21rem;
-								@include widthHeight(0.4266666667rem,0.4266666667rem);
-								@include bg('../../images/warn.png');
-								border-radius:50%;
-							}
+
 							.imgstyle{
 								@include widthHeight(2.0906666667rem,100%);
 								display: flex;
@@ -392,7 +339,7 @@
 								width:100%;
 								padding-bottom:0.2133333333rem;
 								span:nth-of-type(1){
-									width:8.7466666667rem;
+									width:6.7466666667rem;
 									@include sizeColor(0.5973333333rem,#38373c);
 								}
 								span:nth-of-type(2){
@@ -402,6 +349,14 @@
 							.infordetail_bot{
 								width:9.5573333333rem;
 								@include sizeColor(0.512rem,#9e9e9e);
+							}
+							.redicon{
+								position: absolute;
+								left:2.6rem;
+								top:0.21rem;
+								@include widthHeight(0.4266666667rem,0.4266666667rem);
+								@include bg('../../images/warn.png');
+								border-radius:50%;
 							}
 
 						}

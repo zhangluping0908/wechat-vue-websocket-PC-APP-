@@ -3,19 +3,46 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
+	<!--UC强制全屏-->
 	<meta name="screen-orientation" content="portrait" />
+	<!--是否删除默认的苹果工具栏和菜单栏-->
     <meta content="yes" name="apple-mobile-web-app-capable">
+	<!--作用是控制状态栏显示样式-->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<!--格式检测，用来检测html里的一些格式.telephone=no 禁止把数字转化为拨号链接 -->
     <meta name="format-detection" content="telephone=no">
+	<!--页面自动刷新-->
+	<!--<meta http-equiv="refresh" content="20">-->
     <meta name="full-screen" content="yes">
+	<!--QQ强制全屏-->
     <meta name="x5-fullscreen" content="true">
-	<title>微信</title>
-	<script src="http://cangdu.org:8003/socket.io/socket.io.js"></script><!-- 多人聊天 -->
+	<!--避免IE使用兼容模式 这段代码后面加了一个chrome=1，这个Google Chrome Frame（谷歌内嵌浏览器框架GCF），如果有的用户电脑里面装了这个chrome的插件，就可以让电脑里面的IE不管是哪个版本的都可以使用Webkit引擎及V8引擎进行排版及运算，无比给力，不过如果用户没装这个插件，那这段代码就会让IE以最高的文档模式展现效果。-->
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<title>网信聊天</title>
+
+	<!--因为IE8既不支持HTML5也不支持CSS3 Media，所以我们需要加载两个JS文件，来保证我们的代码实现兼容效果-->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+	<![endif]-->
+
+	<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
 <body>
+	<div id="box">因为IE8既不支持HTML5也不支持CSS3 Media，所以我们需要加载两个JS文件，来保证我们的代码实现兼容效果</div>
 	<div id="weixin">
 		<router-view></router-view>
 	</div>
+	<script>
+		//判断页面的打开方式（PC端/移动端）
+		if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+			var pat = document.getElementsByTagName("body")[0]
+			var box = document.getElementById("box")
+			pat.removeChild(box)
+		} else {
+			console.log('PC端')
+		}
+	</script>
 	<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position:absolute;width:0;height:0;visibility:hidden">
 	 	<defs>
 	 		<symbol viewBox="0 0 1024 1024" id="doubleperson">
@@ -408,6 +435,13 @@
 	 			<path d="M0 484.9h1024v54.2H0v-54.2z" fill="#fff" p-id="40000"></path>
 	 			<path d="M484.9 0h54.2v1024h-54.2V0z" fill="#fff" p-id="40001"></path>
 	 		</symbol>
+	 		<!--<symbol viewBox="0 0 1024 1024" id="add">
+	 			<path d="M0 484.9h1024v54.2H0v-54.2z" fill="#fff" p-id="40000"></path>
+	 			<path d="M484.9 0h54.2v1024h-54.2V0z" fill="#fff" p-id="40001"></path>
+	 		</symbol>			 -->
+			<symbol viewBox="0 0 1754 1024" id="svgarrowsup">
+				<path d="M926.500895 22.360088c-27.530787-29.81349-72.07809-29.81349-99.747222 0l-806.070997 871.439322c-27.530787 29.81349-27.530787 77.95778 0 107.840443 27.738305 29.81349 72.285608 29.81349 99.747222 0l756.335731-794.726652 0.069173 0 755.989867 794.726652c27.738305 29.81349 72.354781 29.81349 99.747222 0 27.530787-29.81349 27.669132-77.95778 0-107.840443L926.500895 22.360088 926.500895 22.360088z"></path>
+			</symbol>
 	 		<symbol viewBox="0 0 41.95 33.63" id="computer">
 	 			<path fill="#373838" d="M1.76,26.26h38.428V1.603H1.76V26.26z M2.081,1.922h37.787v24.017H2.081V1.922z"/>
 	 			<path fill="#373838" d="M40.349,0.003H1.6c-0.883,0-1.6,0.715-1.6,1.6V26.1c0,0.887,0.717,1.602,1.6,1.602h16.973v3.396
@@ -636,4 +670,5 @@
 	 		</symbol>
 	 	</defs>
 	</svg>
+
 </html>

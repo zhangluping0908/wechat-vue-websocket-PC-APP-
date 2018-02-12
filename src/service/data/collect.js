@@ -1,6 +1,6 @@
 //我的收藏
 /*通讯录所以联系人
-*	wxid:微信号
+*	wxid:网信号
 *	headurl:头像图片地址
 *	petname:昵称
 *	sex:性别(男0女1)
@@ -26,7 +26,7 @@ export const collect=[
 		"collectime":"今天",
 	},
 	{
-		"wxid":"caiawei",
+		"wxid":"caiwei",
 		"headurl":imgurl+'caiwei.jpg',
 		"petname":"采薇",
 		"sex":1,

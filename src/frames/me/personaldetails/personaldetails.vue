@@ -12,7 +12,7 @@
 					<span>{{userInfo.name}}</span>
 				</div>
 				<div class="privacy_child">
-					<span>微信号</span>
+					<span>网信号</span>
 					<span>{{userInfo.name}}</span>
 				</div>
 				<div class="privacy_child">

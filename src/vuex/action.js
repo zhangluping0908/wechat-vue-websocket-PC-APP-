@@ -10,7 +10,17 @@ export default {
 		state
 	}){
 		const user_id = localStorage.getItem('user_id')
-		let res = await userInfo(user_id)
+		// let res = await userInfo(user_id)
+			const res = {
+				status: localStorage.getItem('status'),
+				message: localStorage.getItem('message'),
+				user_info: {
+					avatar: localStorage.getItem('avatar'),
+					name: localStorage.getItem('name'),
+					id: localStorage.getItem('id')
+				}
+			}
+			
 		commit(GET_USERINFO,res.user_info)
 	},
 	 async getDialog({

@@ -21,12 +21,12 @@
 			</ul>
 			<ul>
 				<router-link to='/me/settings/aboutwc' tag="li">
-					关于微信
+					关于网信
 				</router-link>
 				<!-- <router-link to='/me/settings/help' tag="li">
 					帮助与反馈
 				</router-link> -->
-				<router-link to='/me/settings/login' tag="li">
+				<router-link to='/me/settings/logout' tag="li">
 					退出
 				</router-link>
 			</ul>

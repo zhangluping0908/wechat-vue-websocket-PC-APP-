@@ -1,6 +1,6 @@
 <template>
 	<section class="child_page">
-		<head-top crossover="微信"></head-top>
+		<head-top crossover="网信"></head-top>
 		<section class="more">
 			<div>
 				<span>个性签名</span><span>{{infor.sdasd}}</span>

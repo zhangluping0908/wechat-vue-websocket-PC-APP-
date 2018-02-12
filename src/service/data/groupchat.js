@@ -2,7 +2,7 @@
 /*
 *petname:群名
 *group:群聊人信息
-*wxid:微信号
+*wxid:网信号
 *headurl:头像图片地址
 *petname:昵称	
 *remarks:备注
@@ -10,42 +10,66 @@
 *
 *
 */
-import {imgurl} from 'src/config/env';
+// import {imgurl} from 'src/config/env';
 export const groupchat={
-	"petname":"微信交流群~",
+	"petname":"群组聊天室~",
 	"grouphead":[
+
 		{
-			"username":"chenchangsheng",
-			"avatar":imgurl+'chenchangsheng.jpg',
-			"petname":"陈长生",
-			"remarks":"",
-			"content":"今天下雨",
-			"sendobject":1,
-		},
-		{
-			"username":"812571880",
-			"avatar":imgurl+'chen.jpg',
-			"petname":"百里辰",
-			"content":"今天下雨",
-			"sendobject":1,
-		},
-		{
-			"username":"achuqiao",
-			"avatar":imgurl+'chuqiao.jpg',
-			"petname":"a楚乔",
-			"remarks":"楚乔",
+			"username":"caiwei",
+			"avatar":require('../../images/avatar/caiwei.jpg'),
+			"petname":"采薇",
+			"remarks":"采薇",
 			"sendobject":1,
 			"content":"嗯",
 		},
 		{
-			"username":"caiawei",
-			"avatar":imgurl+'caiwei.jpg',
-			"petname":"采薇",
-			"remarks":"",
+			"username":"chenchangsheng",
+			"avatar":require('../../images/avatar/chenchangsheng.jpg'),
+			"petname":"陈长生",
+			"remarks":"陈长生",
 			"phone":"13000000000",
 			"sendobject":1,
 			"content":"一发型师在给一个女客人做头发的时候把她脸给烫伤了，后来经过协商。。。。他把她给娶了。。。",
-		}
+		},
+		{
+			"username":"chuqiao",
+			"avatar":require('../../images/avatar/chuqiao.jpg'),
+			"petname":"楚乔",
+			"remarks":"楚乔",
+			"phone":"13000000000",
+			"sendobject":1,
+			"content":"从前有个剑客，他人很冷，心很冷，剑很冷，最后冷死了",
+		},
+		{
+			"username":"yuwenyue",
+			"avatar":require('../../images/avatar/yuwenyue.jpg'),
+			"petname":"宇文玥",
+			"remarks":"宇文玥",
+			"phone":"13000000000",
+			"sendobject":1,
+			"content":"你的肩膀，那么近却那么远，到最后想说的话都未曾讲。!",
+		},
+		{
+			"username":"zhangxinzhe",
+			"avatar":require('../../images/avatar/zhangxinzhe.jpg'),
+			"petname":"张信哲",
+			"remarks":"张信哲",
+			"phone":"13000000000",
+			"sendobject":1,
+			"content":"从开始到现在",
+		},
+		{
+			"username":"chenyuan",
+			"avatar":require('../../images/avatar/chenyuan.jpg'),
+			"petname":"程鸢",
+			"remarks":"程鸢",
+			"phone":"13000000000",
+			"sendobject":1,
+			"content":"跟长辈聊天时，我们总是用尽方法想讨他们开心，而长辈三言两语就可以让我们烦心。",
+		},
+		
 	]
 }
+
 

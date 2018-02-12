@@ -1,6 +1,6 @@
 <template>
 	<div class="footer">
-		<!-- 微信底部导航SVG存放 -->
+		<!-- 网信底部导航SVG存放 -->
 		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position:absolute;width:0;height:0;visibility:hidden">
 		 	<defs>
 		 		<symbol viewBox="0 0 1024 1024" id="wx">
@@ -36,7 +36,7 @@
 			    		<use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="$route.path.indexOf('dialogue') !== -1 ? '#wxlight' : '#wx'"></use>
 					</svg>
 				</section>
-				<section class="li_text" :class="$route.path.indexOf('dialogue') !== -1 ? 'colortext' : 'color' " >微信</section>
+				<section class="li_text" :class="$route.path.indexOf('dialogue') !== -1 ? 'colortext' : 'color' " >网信</section>
 			</router-link>
 			<router-link to="/addressbook" tag="li" class="footer_li">
 				<section class="li_svg">

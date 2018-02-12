@@ -18,7 +18,7 @@ const state = {
 	firendwarn: true,		//朋友圈提示红色按钮
 	consumerthing: false,	//登录弹窗显隐
 	allgroup:[],			//所有群聊的人
-	
+	showOrhide: true
 }
 
 export default new Vuex.Store({

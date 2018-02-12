@@ -16,7 +16,7 @@
 					</svg>
 				</div>
 			</section>
-			<p class="computer_text">Windows 微信已登录</p>
+			<p class="computer_text">Windows 网信已登录</p>
 			<p class="computer_text">如果不是本人操作，可以立即退出</p>
 			<section class="soundoff">
 				<div class="silence">
@@ -33,7 +33,7 @@
 				</div>
 			</section>
 			<section class="exitw">
-				<div @click="exitWindows">退出 Windows 微信</div>
+				<div @click="exitWindows">退出 Windows 网信</div>
 			</section>
 		</section>
 		<section class="warn" v-show="coverShow">
@@ -42,7 +42,7 @@
 				<h1>
 					提示
 				</h1>
-				<p>是否退出 Windows 微信 ？</p>
+				<p>是否退出 Windows 网信 ？</p>
 				<div class="warn_obt">
 					<span @click="cancel">取消</span>
 					<span @click="ensure">确定</span>

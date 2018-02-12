@@ -12,6 +12,7 @@ import {
 	CHANGE_RED,
 	LOGIN_COVER,
 	GET_ALLGROUP,
+	SHOWORHIDE,
 } from './mutation-types.js'
 
 export default {
@@ -62,5 +63,9 @@ export default {
 	//获取所有群聊人信息
 	[GET_ALLGROUP](state,allgroup){
 		state.allgroup=allgroup
+	},
+	//mine
+	[SHOWORHIDE](state,showOrhide){
+		state.showOrhide=showOrhide
 	}
 }

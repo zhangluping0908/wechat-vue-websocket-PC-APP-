@@ -1,0 +1,45 @@
+
+    html, body{
+        font-size: 20px !important;
+        background: #fff !important;
+    };
+    #weixin{
+        width: 300px !important;
+        height: 500px !important;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        background: #ebebeb;
+    }
+    .child_page, header, .reminder, .login_button{
+        position: absolute !important;
+        right: 0;
+        width: 300px !important;
+        
+    }
+    .swiper-slide ul li {
+        margin-right: .6rem !important;
+    }
+    footer{
+        position: absolute !important;
+        width: 300px !important;
+    }
+    .contacts{
+        // height: 500px !important;
+        // -webkit-overflow-scrolling: touch; 
+        // overflow-y: scroll !important;
+
+    }
+    #chat-content{
+        width: 300px !important;
+        padding: 0 1rem 0 0;
+    }
+    .coversation .coversationlist ul > li:last-child{
+        margin-bottom: 4.5rem !important;
+    }
+    .footer{
+        position: absolute !important;
+        bottom: 0;
+        right: 0;
+        width: 300px !important;
+    }

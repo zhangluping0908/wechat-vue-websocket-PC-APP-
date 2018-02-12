@@ -32,14 +32,17 @@ const privacy = r => require.ensure([], () => r(require('../frames/me/settings/d
 const currency = r => require.ensure([], () => r(require('../frames/me/settings/detailset/currency')), 'currency')
 const aboutwc = r => require.ensure([], () => r(require('../frames/me/settings/detailset/aboutwc')), 'aboutwc')
 const help = r => require.ensure([], () => r(require('../frames/me/settings/detailset/help')), 'help')
-const login = r => require.ensure([], () => r(require('../frames/me/settings/detailset/login')), 'login')
+const logout = r => require.ensure([], () => r(require('../frames/me/settings/detailset/logout')), 'logout')
+const login = r => require.ensure([], () => r(require('../frames/login/login')), 'login')
 
 export default[{
 	path:'/',
 	component:App,
 	children: [
-		{path: '', redirect: '/dialogue'},   //地址为空时跳转dialogue页面
-		{path: '/dialogue', component: dialogue, },//对话列表页
+		// {path: '', redirect: '/dialogue'},   //地址为空时跳转dialogue页面
+		{path: '/', component: login},
+		{path: '/login', component: login},
+		{path: '/dialogue', component: dialogue},//对话列表页
 		{
 			path: '/singlechat',
 			component: singlechat,
@@ -49,7 +52,6 @@ export default[{
 					component: chatmessage,
 				}
 			]
-
 		},		//单人对话详情页	
 		{
 			path: '/groupchat',
@@ -116,14 +118,15 @@ export default[{
 						{
 							path:'/me/settings/aboutwc',
 							component:aboutwc,		
-						},	//关于微信
+						},	//关于网信
 						{
 							path:'/me/settings/help',
 							component:help,		
 						},	//帮助与反馈
 						{
-							path:'/me/settings/login',
-							component:login,		
+							// path:'/me/settings/login',
+							path: '/me/settings/logout',
+							component:logout,		
 						},	//退出
 					]
 				},	

@@ -1,7 +1,7 @@
 <template>
 	<header>
-		<section class="logoPart" v-if="logoPart">
-			微信
+		<section id='test' class="logoPart" v-if="logoPart" @click='showOrhide'>
+			网信
 		</section>
 		<section class="logoPart" v-if="crossover">
 			<section class="goback" @click="goBackThing">
@@ -17,19 +17,25 @@
 					{{crossover}}
 				</span>
 			</section>
-		</section>
-		<section class="searchPart" v-if="searchPart">
-			<router-link to='/search' class="searchlink">
+		</section>						<!-- searchPart -->
+		<section class="searchPart" v-if="isshow">
+			<router-link to class="searchlink">
 				<svg class="icon-search" fill="#fff">
 				    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#search"></use>
 				</svg>
 			</router-link>
-		</section>
-		<section class="addPart" v-if="add" @click="controlShow">
+		</section>					<!-- add  -->
+		<section class="addPart" v-if="isshow" @click='controlShow'>
 			<svg class="icon-search">
 			    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#add"></use>
 			</svg>	
 		</section>
+			<!-- arrow -->
+			<section class="arrowPart" v-if='arrowIsshow' v-on:click='spreadOrshrink' id='arrrow'>
+				<svg class='icon-svgarrowsup' fill='#FFF'> 
+					<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svgarrowsup"></use>
+				</svg>
+			</section>
 		<!-- 下拉框 -->
 		<section class="selectpart" v-show="addthing">
 			<div class="cover" @click="controlhide"></div>
@@ -93,30 +99,71 @@
 </template>
 
 <script>
+	import {mapState, mapMutations} from 'vuex'
+
+	var scan = null
 
 	export default{
 		data(){
 			return{
 				addthing:false,
-				
+				show: true,	
+				isshow: true,
+				arrowIsshow: true,
+				count: 1
 			}
 		},
 		props: ['logoPart', 'crossover', 'searchPart', 'add', 'person', "search", "clickrefresh"],
 		created(){
-
+			this.showOrhide()
 		},
 		mounted(){
-			
+		
 		},
 		components:{
 
 		},
 		computed:{
-
+			// ...mapState([
+			// 	'showOrhide'
+			// ])
+		},
+		updated(){
+			// this.spreadOrshrink()
 		},
 		methods:{
+
+			// ...mapMutations([
+			// 	'SHOWORHIDE'
+			// ]),
+			// change(){
+			// 	// alert('sdf')
+			// 	this.SHOWORHIDE(false)
+			// },
+
+			//子组件向父组件传值
+			spreadOrshrink(){
+				this.$nextTick(() => {
+					this.$emit('listenToHeadEvent', this.count++)
+				})
+				
+			},
+			showOrhide(){
+				if(!/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent) && this.$route.path == '/singlechat' || '/groupchat'){
+					this.isshow = false
+				}
+				if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent) && (this.$route.path !== '/dialogue' || '/addressbook' || '/find' || '/me')) {
+					this.isshow = true
+					this.arrowIsshow = false
+				}
+				else{
+					this.isshow = false
+					this.arrowIsshow = true
+				}
+
+			},
 			controlShow(){
-				this.addthing=true;
+				this.addthing=!this.addthing;
 			},
 			controlhide(){
 				this.addthing=false;
@@ -184,25 +231,33 @@
 			}
 			
 		}
-		.selectpart{
-			position: fixed;
-			z-index:2;
-			width:100%;
-			height:100%;
-			top:0;
-			right:0;
-			.cover{
-				position: fixed;
-				width:100%;
-				height:100%;
-				background:#000;
-				opacity: 0;
+		.arrowPart{
+			@include topcenter;
+			right:1.0453333333rem;
+			@include widthHeight(0.8106666667rem,0.8106666667rem);
+			svg{
+				@include widthHeight(100%,100%);
 			}
+		}
+		.selectpart{
+			// position: fixed;
+			// z-index:2;
+			// width:100%;
+			// height:100%;
+			// top:0;
+			// right:0;
+			// .cover{
+			// 	position: fixed;
+			// 	width:100%;
+			// 	height:100%;
+			// 	background:#000;
+			// 	opacity: 0;
+			// }
 			.selectlist{
 				position: absolute;
 				z-index:100;
 				top:2.06933rem;
-				right:0.4693333333rem;
+				right:0rem;
 				width:8.5333333333rem;
 				background:#373b3e;
 				ul{

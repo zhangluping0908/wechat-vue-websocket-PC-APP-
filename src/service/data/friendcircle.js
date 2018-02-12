@@ -1,7 +1,7 @@
 //朋友圈数据
 /*
-*wxid:微信号
-*headurl：微信头像
+*wxid:网信号
+*headurl：网信头像
 *sex:性别(男0女1)
 *petname：昵称
 *remarks：备注

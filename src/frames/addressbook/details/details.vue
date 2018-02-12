@@ -16,7 +16,7 @@
 						</div>
 					</div>
 					<div class="details_right_obt">
-						微信号：{{infor.wxid}}
+						网信号：{{infor.wxid}}
 					</div>
 				</div>
 			</div>

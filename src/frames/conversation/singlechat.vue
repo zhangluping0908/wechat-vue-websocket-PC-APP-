@@ -1,7 +1,7 @@
 <template>
 	<section>
-		<head-top :crossover="chatname">
-			<section class="coversPart" slot="person">
+		<head-top :crossover="chatname" v-on:listenToHeadEvent='MsgFromHead'>
+			<section class="coversPart" slot="person" id='coversPart' v-if='coversPart'>
 				<router-link to='/singlechat/chatmessage' class="person_link">
 					<svg fill="#fff" class="icon-search">
 					    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#person"></use>
@@ -9,14 +9,16 @@
 				</router-link>
 			</section>
 		</head-top>
-		<section class="coversation" ref="singleHeight">
-			<section class="coversationlist" @click="bottomHide">
-				<div class="underscore">————&nbsp;我是机器人小辰，现在我们可以聊天了&nbsp;————</div>
-				<ul>
+		<section class="coversation"   >
+			<section class="coversationlist" @click="bottomHide" ref="chat">
+				<ul id="chat-content">
 					<!-- 对方 -->
 					<li v-for="item in conversine">
 						<div class="other" :class="{mysay : item.sendobject !== 1 }">
-							<img :src="item.headurl" alt="" @click="enlargeImg(item.headurl)">
+						
+							<div class='say-time'>{{item.sendobject == 1 ? item.time : new Date(Number(new Date().getTime())).toLocaleDateString() + " " + new Date(Number(new Date().getTime())).toLocaleTimeString().substr(0, 7)}}</div>
+
+							<img :src="item.sendobject == 1 ? item.headurl : userInfoData.avatar"  alt="" @click="enlargeImg(item.headurl)">
 							<div class="whatsay">
 								<div class="whatsay_svg">
 									<svg>
@@ -81,21 +83,23 @@
 		<section class="enlarge" v-if="enlarge" @click="enlargeHide" :class="{'movein-animate' : enlargeShow, 'moveout-animate-leave' : enlargehides}" >
 			<img :src="enlargeurl" alt="">
 		</section>
-		<transition name="router-show">
+		
 		    <router-view></router-view>
-		</transition>
+		 
 	</section>
 
 </template>
 
 <script>
 	import headTop from 'src/components/header/head';
-	import {mapState, mapActions,} from 'vuex';
+	import {mapState, mapActions, mapMutations} from 'vuex';
 	import {userWord, chatData} from 'src/service/getData'
 	import {imgurl} from 'src/config/env';
 	import 'src/config/swiper.min.js' 
 	import 'src/style/swiper.min.css'
 	import fetch from 'src/config/fetch'
+	import $ from 'jquery'
+	import {requireImgUrl} from 'src/utils/requireImgUrl'
 
 	export default{ 
 		data(){
@@ -103,7 +107,7 @@
 				inputmessage:'',//输入的文本内容
 				light:false,	//输入框不为空时，input下边框变色
 				clickmore:false,	//点击加号底部显示、隐藏
-				chatname:'',		//聊天名字
+				chatname:'this.infor.petname',		//聊天名字
 				ifme:false,			//发消息的对象是否是自己
 				enlargeurl:'',		//头像地址
 				enlargehides:false,
@@ -114,13 +118,20 @@
 				robotCont:'',
 				newInfo:{},
 				chatData:{},
-				userInfoData:{}
+				userInfoData:{},
+				talk:[],
+				coversPart: true
 			}
 		},
 		created(){
-
+			this.coversPart_isshow()
+			this.getSingleTalkData()
+		},
+		beforeMount(){
+			console.log('beforeMount')	
 		},
 		mounted(){
+			
 		    chatData().then((res) => {
 		    	this.chatData=res;
 		    }).then(()=>{
@@ -131,8 +142,14 @@
 	    	    });
 		    })
 			this.chatname=this.infor.remarks ? this.infor.remarks : this.infor.petname;
-			this.getUserInfo();
-			this.userInfoData=this.userInfo
+			// this.getUserInfo();
+			// this.userInfoData=this.userInfo
+			this.userInfoData = {
+				avatar: requireImgUrl(localStorage.getItem('wxid')),
+				id: localStorage.getItem('id'),
+				name: localStorage.getItem('name'),
+				wxid: localStorage.getItem('wxid')
+			}
 			userWord().then((res) => {
 				//this.conversine=[...res]
 			});	
@@ -149,7 +166,39 @@
 		beforeDestroy(){
             clearTimeout(this.timer);
         },
+		updated: function(){
+			this.$nextTick(()=>{
+				if(this.$refs.chat){
+					$(this.$refs.chat).scrollTop($('#chat-content').height())
+				}
+			})
+		},
 		methods:{
+			...mapMutations([
+				'SAVE_MESSAGE'
+			]),
+			//接收从子组件传来的值
+			MsgFromHead(data){
+				console.log(data)
+				if(data%2 == 0){
+					$("#weixin").css({
+						'position':'fixed ',
+						'bottom': "-460px"
+					})					
+				}else{
+					$("#weixin").css({
+						'position':'fixed',
+						'bottom': "0px"
+					})
+				}
+			},
+			coversPart_isshow(){
+				if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)){
+					this.coversPart = true
+				}else{
+					this.coversPart = false
+				}
+			},
 			...mapActions([
                 'getUserInfo',
             ]),
@@ -166,7 +215,7 @@
 				}
 			},
 			bottomShow(){
-				this.clickmore=true;
+				this.clickmore=!this.clickmore;
 			},
 			bottomHide(){
 				this.clickmore=false;
@@ -174,38 +223,47 @@
 			inputBottomHide(){
 				this.clickmore=false;
 			},
-			async clickSend(){
+			getSingleTalkData(){
+				var ws = new WebSocket('ws://10.20.88.76:8204/multisub-split/' + localStorage.getItem('wxid'))
+				ws.onmessage = env => {
+					var str = decodeURIComponent(env.data).split('=')[1].split('&')[0]
+					const fromUserId = env.data.split('&')[1].split('=')[1]
+					var timeStamp = decodeURIComponent(env.data).split('&')[2].split('=')[1];				
+					if(fromUserId == this.infor.wxid && 
+						fromUserId != this.userInfoData.wxid
+					){
+						this.conversine.push({
+							"wxid":this.infor.wxid,
+							'headurl': requireImgUrl(this.infor.wxid),
+							"sendobject":this.infor.sendobject,
+							"Messageblob":str,
+							"time":new Date(parseInt(timeStamp) * 1000).toLocaleString().replace(/:\d{1,2}$/,' '),
+							"flag": decodeURIComponent(env.data).split('&')[1] == 'fromUserId=' + this.userInfoData.wxid
+						});	
+					}
+				}
+			},
+			async clickSend(){						
 				this.conversine.push({
-					"wxid":"xulianjie442154157",
-					"headurl":imgurl+this.userInfoData.avatar,
+					"wxid": this.userInfoData.wxid,
+					"avatar": this.userInfoData.avatar,
 					"sendobject":0,
-					"Messageblob":this.inputmessage,
+					"Messageblob":this.inputmessage,	
 				});
 				const inputmessage = this.inputmessage;
 				this.inputmessage='';
-				this.$nextTick(()=>{
-					window.scrollTo(0,this.$refs.singleHeight.offsetHeight-window.innerHeight)
-				})
-				try{
-					const res = await fetch('/robot/question', {question: inputmessage})
-					this.light=false;
-					if (res.status == 200) {
-						this.infor.Messageblob=res.content
-						this.conversine.push({
-							"wxid":this.infor.wxid,
-							"headurl":this.infor.headurl,
-							"sendobject":this.infor.sendobject,
-							"Messageblob":res.content,
-						});
-						this.$nextTick(()=>{
-							window.scrollTo(0,this.$refs.singleHeight.offsetHeight-window.innerHeight)
+				$.ajax({
+					url:'http://maybach.wxfaelocal.com:8204/pub-proxy/123',
+					data:{
+						data: JSON.stringify({
+						'toUserId': this.infor.wxid,
+						'fromUserId': this.userInfoData.wxid,
+						'message': inputmessage
 						})
-					}else{
-						throw new Error(res)
-					}
-				}catch(err){
-					alert('获取机器人聊天信息失败', err);
-				}
+					},
+					method:'post',
+					dataType:'json'
+				})
 			},
 			enlargeImg(enlargeImg){
 				this.enlargeurl=enlargeImg;
@@ -246,37 +304,75 @@
 		}
 	}
 	.coversation{
+		// background-color: #ebebeb;
+		// -webkit-overflow-scrolling: touch; 
+		// padding-top: 2.06933rem;
+		// height: 630px;
 		background-color: #ebebeb;
 		-webkit-overflow-scrolling: touch; 
-		padding-top: 2.06933rem;
+		padding-top: 2.3rem;
+		overflow-x: hidden;
+		position: relative;
 		.coversationlist{
+			// position: relative;
+			// padding:0 .32rem;
+			// overflow:auto;
+			// margin:0 auto;
 			position: relative;
-			padding:0 .32rem;
+			right: -.5rem;
+			padding-right: 1rem;
 			overflow:auto;
-			margin:0 auto;
+			overflow-x: hidden;
+			// margin-left: -10px;
+			height: 25.1rem;
 			.underscore{
 				padding-top:0.2rem;
 				text-align:center;
 				@include sizeColor(0.5546666667rem,#999);
 			}
 			ul{
-				padding-top:.4rem;
-				padding-bottom:2.2rem;
-				width:15.4rem;
+				// padding-top:.4rem;
+				// padding-bottom:2.2rem;
+				// width:15.4rem;
+				// overflow-scrolling: touch; 
+				// -webkit-overflow-scrolling: touch; 
+				// top:0;
+				overflow: auto;
+				overflow-x: hidden;
 				overflow-scrolling: touch; 
-				-webkit-overflow-scrolling: touch; 
-				top:0;
+				-webkit-overflow-scrolling: touch; 	
+				-moz-overflow-scrolling: touch;
+				// padding-top: 20px;
+				>li:first-child{
+					margin-top:.5rem;
+				}
+				>li:last-child{
+					margin-bottom:2rem;
+				}
 				li{
 					.other{
 						width:100%;
 						@include justify(flex-start);
-						margin-bottom:0.512rem;
+						// margin-bottom:0.512rem;
+						// align-items:top;
+						margin-bottom:1rem;
+						// padding-right: 20px;
 						align-items:top;
+						position: relative;
 						img{
 							display:block;
+							margin-top: .4rem;
 							@include widthHeight(1.7493333333rem,1.7493333333rem);
 						}
+						.say-time{
+							@include sizeColor(.48rem,#999);
+							width: 11rem;
+							position: absolute;
+							top: -.3rem;
+							// right:.8rem;						
+						}
 						.whatsay{
+							margin-top: .4rem;
 							position: relative;
 							.whatsay_svg{
 								@include widthHeight(0.4266666667rem,0.64rem);
@@ -307,6 +403,16 @@
 					.mysay{
 						display:flex;
 						flex-direction:row-reverse;
+						position: relative;
+						.say-time{
+							position: absolute;
+							top: -.3rem;
+							right:-5.3rem;
+							width: 11rem;					
+						}
+						img{
+
+						}
 						.whatsay{
 							.whatsay_svg{
 								right:.36rem;
@@ -367,7 +473,7 @@
 			div:nth-of-type(4){
 				margin-right:0;
 				.send{
-					width:1.8133333333rem;
+					width:1.4133333333rem;
 					background:#16af17;
 					height:1.3653333333rem;
 					padding:.682666rem 0;

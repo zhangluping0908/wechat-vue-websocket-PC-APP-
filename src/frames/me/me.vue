@@ -1,6 +1,6 @@
 <template>
 	<section>
-		<head-top logo-part="true" search-part="true" add="true"></head-top>
+		<head-top logo-part="true" search-part="true" add="true" v-on:listenToHeadEvent='MsgFromHead'></head-top>
 		<find-me></find-me>
 		<foot-guide></foot-guide>
 		<transition name="router-show">
@@ -36,7 +36,21 @@
 			
 		},
 		methods:{
-
+			//接收从子组件传来的值
+			MsgFromHead(data){
+				console.log(data)
+				if(data%2 == 0){
+					$("#weixin").css({
+						'position':'absolute ',
+						'bottom': "-460px"
+					})					
+				}else{
+					$("#weixin").css({
+						'position':'absolute',
+						'bottom': "0px"
+					})
+				}
+			},
 		}
 	}
 </script>

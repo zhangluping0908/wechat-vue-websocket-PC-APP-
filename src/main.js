@@ -16,7 +16,7 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
 	routes,
-	mode: 'history', //路由模式
+	// mode: 'history', //路由模式
 	strict: process.env.NODE_ENV !== 'production',
 	scrollBehavior(to, from, savedPosition) {
 		if (savedPosition) {

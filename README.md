@@ -1,6 +1,6 @@
 ### 前言
 
-这个项目是利用工作之余写的一个模仿微信app的单页面应用，整个项目包含27个页面，涉及实时群聊，机器人聊天，同学录，朋友圈等等，后续页面还是开发中。写这个项目主要目的是练习和熟悉vue和vuex的配合使用，利用socket.io实现实时聊天。
+这个项目是利用工作之余写的一个模仿网信app的单页面应用，整个项目包含27个页面，涉及实时群聊，机器人聊天，同学录，朋友圈等等，后续页面还是开发中。写这个项目主要目的是练习和熟悉vue和vuex的配合使用，利用socket.io实现实时聊天。
 
 欢迎各路大神Issues
 
@@ -45,7 +45,7 @@ npm run dev (访问本地，运行后访问 http://localhost:8882)
 
 # 目标功能
 
-- [x] 微信 
+- [x] 网信 
 - [x] 通讯录
 - [x] 通讯录右边导航功能
 - [x] 发现 
@@ -54,7 +54,7 @@ npm run dev (访问本地，运行后访问 http://localhost:8882)
 - [x] 新消息提醒
 - [x] 勿扰模式
 - [x] 聊天
-- [x] widows 微信已登录
+- [x] widows 网信已登录
 - [x] 搜索页
 - [x] 对话页
 - [x] 对话功能
@@ -104,7 +104,7 @@ npm run dev (访问本地，运行后访问 http://localhost:8882)
 │   │   ├── findandMe
 │   │   │   └── findandMe.vue                    // 发现和我共同的模块的列表
 │   │   ├── footer
-│   │   │   └── foot.vue                         // 底部微信导航
+│   │   │   └── foot.vue                         // 底部网信导航
 │   │   └── header
 │   │       └── head.vue                         // 头部公共组件
 │   ├── config                                   // 基本配置
@@ -131,7 +131,7 @@ npm run dev (访问本地，运行后访问 http://localhost:8882)
 │   │   │   ├── groupchat.vue                    // 群聊
 │   │   │   └── singlechat.vue                   // 单人对话
 │   │   ├── dialogue
-│   │   │   └── dialogue.vue                     // 微信首页(对话列表页)
+│   │   │   └── dialogue.vue                     // 网信首页(对话列表页)
 │   │   ├── find
 │   │   │   ├── find.vue                         // 发现
 │   │   │   ├── friendcircle
@@ -150,7 +150,7 @@ npm run dev (访问本地，运行后访问 http://localhost:8882)
 │   │   │   │   └── photoalbum.vue               // 我的相册
 │   │   │   ├── settings
 │   │   │   │   ├── detailset
-│   │   │   │   │   ├── aboutwc.vue              // 关于微信
+│   │   │   │   │   ├── aboutwc.vue              // 关于网信
 │   │   │   │   │   ├── chat.vue                 // 聊天
 │   │   │   │   │   ├── currency.vue             // 通用
 │   │   │   │   │   ├── disturbance.vue          // 勿扰模式

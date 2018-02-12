@@ -1,6 +1,6 @@
 <template>
 	<section>
-		<head-top logo-part="true" search-part="true" add="true"></head-top>
+		<head-top logo-part="true" search-part="true" add="true" v-on:listenToHeadEvent='MsgFromHead'></head-top>
 		<!-- 联系人列表 -->
 		<section class="contacts" ref="contactList">
 			<div class="contacts_top">
@@ -52,7 +52,8 @@
 					<li v-for="(value, key, index) in manageaddress" :key="key" class="addlistLi" >
 						<h1>{{key}}</h1>
 						<ul>
-							<router-link to="/addressbook/details" tag="li" v-for="(item, index) in value" @click.native='detailMessage(item)'>
+						<!-- /addressbook/details -->
+							<router-link to="/singlechat" tag="li" v-for="(item, index) in value" @click.native='detailMessage(item)'>
 								<div class="personlist_img">
 									<img :src="item.headurl" alt="">
 								</div>
@@ -63,29 +64,23 @@
 						</ul>
 					</li>
 				</ul>
-				<section class="guide_wipe">
-					<section class="list_guide">
-						<dl>
-							<dd v-for="(value, index) in sortlist" :key="index" @touchstart="startThing(value)" @touchend="endThing">{{value}}</dd>
-						</dl>
-						<p>#</p>
-					</section>
-				</section>
+
 				<section class="big-letter" v-if="letter">
 					<div class="letter-bg"></div>
 					<div class="letter">
 						{{atpresent}}
 					</div>
 				</section>
-				<section class="peoplenum">{{peoplenum}}位联系人</section>
+				<section class="peoplenum">共{{peoplenum}}位联系人</section>
 			</div>
 
 		</section>
 		
 		<foot-guide></foot-guide>
-		<transition name="router-show">
+		<!-- <transition name="router-show">
 			<router-view></router-view>
-		</transition>
+		  -->
+		<router-view></router-view>
 	</section>	
 </template>
 
@@ -150,8 +145,25 @@
 			...mapMutations([
 			    'SAVE_MESSAGE'
 			]),
+			//接收从子组件传来的值
+			MsgFromHead(data){
+				console.log(data)
+				if(data%2 == 0){
+					$("#weixin").css({
+						'position':'absolute ',
+						'bottom': "-460px"
+					})					
+				}else{
+					$("#weixin").css({
+						'position':'absolute',
+						'bottom': "0px"
+					})
+				}
+			},
 			detailMessage(item){
+				console.log(this.$store)
 				this.SAVE_MESSAGE(item);
+				console.log(this.$store.state.infor)
 			},
 			startThing(value){
 				this.letter=true;
@@ -198,7 +210,8 @@
 	.contacts{
 		width:100%;
 		background:#fff;
-		padding-top:2.06933rem;
+		// padding-top:2.06933rem;
+		overflow: hidden;
 		.contacts_top{
 			ul{
 				width:14rem;

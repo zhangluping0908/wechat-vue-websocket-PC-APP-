@@ -29,3 +29,4 @@ export const dialog = [
 	"sendobject":1,
 },
 ]
+
